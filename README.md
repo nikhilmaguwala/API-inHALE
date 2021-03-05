@@ -36,7 +36,7 @@ This project will run on **NodeJs** using **MongoDB** as database. I had tried t
 1.  Clone the project from github.
 
 ```bash
-git clone https://github.com/maitraysuthar/rest-api-nodejs-mongodb.git ./myproject
+git clone git@github.com:nikhilmaguwala/API-inHALE.git
 ```
 
 ### Using manual download ZIP
