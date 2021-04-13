@@ -1,7 +1,6 @@
 const PatientModel = require("../models/PatientModal");
 const { body,validationResult } = require("express-validator");
 const { sanitizeBody } = require("express-validator");
-const auth = require("../middlewares/jwt");
 //helper file to prepare responses.
 const apiResponse = require("../helpers/apiResponse");
 /**
@@ -21,7 +20,7 @@ exports.addPatients = [
 	body("gender").isLength({ min: 1 }).trim().withMessage("Gender must be specified."),
 	body("phoneNo").isLength({ min: 10, max: 10 }).trim()
 		.withMessage("Phone No. must be of 10 characters").custom((value) => {
-			return PatientModel.findOne({phoneNo : value}).then((user) => {
+			return PatientModel.findOne({phoneNo : value, doctorId: body("doctorId")}).then((user) => {
 				console.log(user);
 				if (user) {
 					return Promise.reject("Phone No. already in use");
@@ -49,6 +48,7 @@ exports.addPatients = [
 						lastName: req.body.lastName,
 						gender: req.body.gender,
 						phoneNo: req.body.phoneNo,
+						doctorId: req.body.doctorId,
 					}
 				);
 					// Save user.
@@ -60,6 +60,7 @@ exports.addPatients = [
 						lastName: user.lastName,
 						gender: user.gender,
 						phoneNo: user.phoneNo,
+						doctorId: user.doctorId,
 					};
 					return apiResponse.successResponseWithData(res,"Adding Patient Success.", userData);
 				});
@@ -71,10 +72,9 @@ exports.addPatients = [
 	}];
 
 exports.getPatients = [
-	auth,
 	function (req, res) {
 		try {
-			PatientModel.find().then((patients)=>{
+			PatientModel.find({ doctorId: req.params.doctorId}).then((patients)=>{
 				if(patients.length > 0){
 					return apiResponse.successResponseWithData(res, "Operation success", patients);
 				}else{

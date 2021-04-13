@@ -5,6 +5,7 @@ var PatientSchema = new mongoose.Schema({
 	lastName: {type: String, required: true},
 	gender: {type: String, required: true},
 	phoneNo: {type: String, required: true},
+	doctorId: {type: String, required:true},
 }, {timestamps: true});
 
 // Virtual for user's full name
